@@ -13,12 +13,6 @@ async function main() {
 
   let phrase = generateWords();
 
-  const seed = Bip39.mnemonicToSeedSync(phrase).slice(0, 32);
-  const account = Keypair.fromSeed(seed);
-  const pubKey = account.publicKey.toString();
-
-  console.log(`Try #${index} ${pubKey}: ${phrase}`);
-
   const entries = fs.readFileSync(entriesFilename);
 
   if (entries.includes(pubKey)) {
@@ -27,6 +21,12 @@ async function main() {
       return main();
     }, 0);
   } else {
+    const seed = Bip39.mnemonicToSeedSync(phrase).slice(0, 32);
+    const account = Keypair.fromSeed(seed);
+    const pubKey = account.publicKey.toString();
+
+    console.log(`Try #${index} ${pubKey}: ${phrase}`);
+
     if (pubKey === 'CqHBALZHoYYQ7ymr5TdgWhvCc19GHVGubkAaRAq3th2a') {
       console.error('FOUND IT', phrase);
       await fs.appendFileSync(resultsFilename, `\n${phrase}`);
